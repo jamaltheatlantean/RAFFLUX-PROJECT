@@ -64,7 +64,7 @@ contract Rafflux is VRFConsumerBaseV2, Ownable {
 		uint maxTimeActive;		// 	The max time the raffle will be active
 		uint startedAt;			//	The timestamp when raffle starts
 		uint ticketsLeft;		//	The number of tickets left until sold out
-		//uint requestId;			//	The id of the request to chainlink
+		//uint requestId;		//	The id of the request to chainlink
 	}
 	
 	// Info about the tickets an user has for a raffle
