@@ -136,13 +136,13 @@ contract Rafflux is VRFConsumerBaseV2, Ownable {
 	VRFCoordinatorV2Interface public COORDINATOR;
 	uint64 public s_subscriptionId;
 	//uint256 public s_requestId;
-    uint256[] public s_randomWords;
-    uint32 public callbackGasLimit = 2500000;
-    bytes32 keyhash =  0x79d3d8832d904592c0bf9818b621522c988bb8b0c05cdc3b15aea1b6e8db0c15;
+    	uint256[] public s_randomWords;
+    	uint32 public callbackGasLimit = 2500000;
+    	bytes32 keyhash =  0x79d3d8832d904592c0bf9818b621522c988bb8b0c05cdc3b15aea1b6e8db0c15;
 	// More info: https://docs.chain.link/docs/vrf/v2/subscription/supported-networks/
     
     
-    // GOERLI COORDINATOR: 0x2Ca8E0C643bDe4C2E08ab1fA0da3401AdAD7734D
+   	 // GOERLI COORDINATOR: 0x2Ca8E0C643bDe4C2E08ab1fA0da3401AdAD7734D
 	constructor(/*address _vrfCoordinator*/) VRFConsumerBaseV2(0x2Ca8E0C643bDe4C2E08ab1fA0da3401AdAD7734D) {
 		_owner = payable(msg.sender);
 		
@@ -369,37 +369,37 @@ contract Rafflux is VRFConsumerBaseV2, Ownable {
 	// Request a random value to Vrf Chainlink
 	function _requestRandomness(uint256 _raffleId) internal returns (uint256) {
 		require(s_subscriptionId != 0, "Subscription ID not set");
-        // Will revert if subscription is not set and funded
-        uint256 requestId = COORDINATOR.requestRandomWords(
-            keyhash,
-            s_subscriptionId,
-            3, 						// minimum confirmations before response
-            callbackGasLimit,
-            1 						// `numWords` : number of random values we want
-        );
-        
-        requestIdToRaffleId[requestId] = _raffleId;
-        
-        return requestId;
+        	// Will revert if subscription is not set and funded
+        	uint256 requestId = COORDINATOR.requestRandomWords(
+		    keyhash,
+		    s_subscriptionId,
+		    3, 						// minimum confirmations before response
+		    callbackGasLimit,
+		    1 						// `numWords` : number of random values we want
+		);
+
+		requestIdToRaffleId[requestId] = _raffleId;
+
+		return requestId;
 		//console.log("Request ID: ", s_requestId);
-        // requestId looks like uint256:
-        // 80023009725525451140349768621743705773526822376835636211719588211198618496446
+		// requestId looks like uint256:
+		// 80023009725525451140349768621743705773526822376835636211719588211198618496446
 	}
 	
 	
-    // This is the callback that the VRF coordinator sends the random values to
-    function fulfillRandomWords(uint256 _requestId, uint256[] memory _randomWords) internal override {
-        // randomWords looks like this uint256:
-        // 68187645017388103597074813724954069904348581739269924188458647203960383435815
+    	// This is the callback that the VRF coordinator sends the random values to
+    	function fulfillRandomWords(uint256 _requestId, uint256[] memory _randomWords) internal override {
+        	// randomWords looks like this uint256:
+        	// 68187645017388103597074813724954069904348581739269924188458647203960383435815
 		s_randomWords = _randomWords;
 		
 		uint256 _raffleId = requestIdToRaffleId[_requestId];
         
-     	uint totalTicketsSold = idToAcceptedRaffle[_raffleId].maxTickets - idToAcceptedRaffle[_raffleId].ticketsLeft;
-        uint256 random = _randomWords[0] % totalTicketsSold; // use modulo to choose a random index.
+     		uint totalTicketsSold = idToAcceptedRaffle[_raffleId].maxTickets - idToAcceptedRaffle[_raffleId].ticketsLeft;
+        	uint256 random = _randomWords[0] % totalTicketsSold; // use modulo to choose a random index.
 		
 		_finishRaffle(_raffleId, random);
-    }
+    	}
 	
 	
 	// The Raffle will end and the payment will send after receive a random number
@@ -479,9 +479,9 @@ contract Rafflux is VRFConsumerBaseV2, Ownable {
 	}
 	
 	// Function needed to use the IERC721Receiver
-    function onERC721Received(address, address, uint256, bytes calldata) external pure returns (bytes4) {
-        return IERC721Receiver.onERC721Received.selector;
-    }
+    	function onERC721Received(address, address, uint256, bytes calldata) external pure returns (bytes4) {
+        	return IERC721Receiver.onERC721Received.selector;
+    	}
     
     	
 	// Withdraw functions
