@@ -5,7 +5,6 @@ pragma solidity ^0.8.9;
 // Uncomment this line to use console.log
 // import "hardhat/console.sol";
 
-import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
 import "@openzeppelin/contracts/token/ERC1155/IERC1155.sol";
@@ -21,8 +20,9 @@ import "@chainlink/contracts/src/v0.8/VRFConsumerBaseV2.sol";
 // ./interfaces/KeeperCompatibleInterface.sol
 import "@chainlink/contracts/src/v0.8/KeeperCompatible.sol";
 
+error RAFFLUX__NotOwner();
 
-contract Rafflux is VRFConsumerBaseV2, Ownable {
+contract Rafflux is VRFConsumerBaseV2 {
 
 	using Counters for Counters.Counter;
 	
@@ -132,6 +132,12 @@ contract Rafflux is VRFConsumerBaseV2, Ownable {
 		address creator
 	);
 	
+	modifier onlyOwner() {
+		if(msg.sender != _owner)
+			revert RAFFLUX__NotOwner();
+		_;
+	}
+	
 	// VRF
 	VRFCoordinatorV2Interface public COORDINATOR;
 	uint64 public s_subscriptionId;
@@ -148,6 +154,12 @@ contract Rafflux is VRFConsumerBaseV2, Ownable {
 		
 		COORDINATOR = VRFCoordinatorV2Interface(0x2Ca8E0C643bDe4C2E08ab1fA0da3401AdAD7734D); 
 		s_subscriptionId = 7611;
+	}
+
+	// function transfers ownership to a new address
+	function transferOwnership(address payable _newOwner) external onlyOwner {
+		require(_newOwner != address(0), "Not owner");
+		_owner = _newOwner;
 	}
 	
 	
